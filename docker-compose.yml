@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  db:
+    env_file:
+      - .env
+    image: mysql
+    restart: always
+    ports:
+      - '3307:3306'
+    volumes:
+      - "./db:/var/lib/mysql"
+
+  development:
+    env_file:
+      - .env
+    build:
+      target: development
+      context: .
+    image: michael-nest:development
+    restart: always
+    ports:
+      - '3000:3000'
+    volumes:
+      - ".:/usr/src/app"
+    depends_on:
+      - db
+
+  production:
+    env_file:
+      - .env
+    build:
+      target: production
+      context: .
+    image: michael-nest:production
+    restart: always
+    ports:
+      - '3001:3000'
+    depends_on:
+      - db
+
+    
